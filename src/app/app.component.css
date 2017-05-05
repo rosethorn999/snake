@@ -1,0 +1,22 @@
+.container {
+    margin: 0px auto;
+    width: 500px;
+    height: 500px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.row {
+    height: 30px;
+}
+
+.column {
+    border: 1px solid rgba(97, 131, 138, .3);
+    width: 28px;
+    height: 28px;
+    background: cadetblue;
+    display: inline-block;
+    cursor: pointer;
+}
