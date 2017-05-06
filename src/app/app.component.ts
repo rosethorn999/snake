@@ -30,25 +30,25 @@ export class AppComponent implements OnInit {
     this.setSnakePosition();
 
     setInterval(() => {
-      this.creatFruit();
-    }, 3000);
+      this.createFruit(); //todo碰撞到水國時要執行
+    }, 1000);
   }
 
-  creatFruit(): void {
-    let randomX: number = Math.floor(Math.random() * Board.columnCount);
-    let randomY: number = Math.floor(Math.random() * Board.rowCount);
-    this.fruit.position = [randomX, randomY];
-    console.log(this.fruit);
+  createFruit(): void {
+    let getRandom = function (isRow: boolean): number {
+      let ratio: number = isRow ? Board.rowCount : Board.columnCount;
+      return Math.floor(Math.random() * ratio);
+    }
 
-  }
+    let randomX: number = getRandom(true);
+    let randomY: number = getRandom(false);
 
-  setBoard(): void {
-    this.board = [];
-
-    for (var i = 0; i < Board.rowCount; i++) {
-      this.board[i] = [];
-      for (var j = 0; j < Board.columnCount; j++) {
-        this.board[i][j] = false;
+    for (let i = 0; i < this.Snake.position.length; i++) {
+      if (randomX == this.Snake.position[i][0] && randomY == this.Snake.position[i][1]) {
+        this.createFruit(); //是蛇就重新取一個
+        break;
+      } else {
+        this.fruit.position = [randomX, randomY];
       }
     }
   }
@@ -65,6 +65,16 @@ export class AppComponent implements OnInit {
     }
   }
 
+  setBoard(): void {
+    this.board = [];
+
+    for (var i = 0; i < Board.rowCount; i++) {
+      this.board[i] = [];
+      for (var j = 0; j < Board.columnCount; j++) {
+        this.board[i][j] = false;
+      }
+    }
+  }
 
   setColors(x: Number, y: Number): string {
     let fruitX = this.fruit.position[0];
