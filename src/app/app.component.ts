@@ -13,6 +13,7 @@ import { Controls, Board, Colors } from './app.consts';
 export class AppComponent implements OnInit {
   EventDirect: number;
   interval: Number = 150;
+  state = { pause: false };
   board = [];
   Snake = {
     direction: Controls.RIGHT,
@@ -109,9 +110,11 @@ export class AppComponent implements OnInit {
       this.setFruit(); //產生新水果
     }
 
-    setTimeout(() => {
-      this.setSnakePosition();
-    }, this.interval);
+    if (!this.state.pause) {
+      setTimeout(() => {
+        this.setSnakePosition();
+      }, this.interval);
+    }
 
   }
 
@@ -127,6 +130,16 @@ export class AppComponent implements OnInit {
         this.Snake.direction = Controls.UP;
       } else if (e.keyCode === Controls.DOWN && pastDirection !== Controls.UP) {
         this.Snake.direction = Controls.DOWN;
+      }
+    }
+
+
+    if (e.keyCode == Controls.SPACE) {
+      if (this.state.pause) { //已經是暫停的
+        this.state.pause = false;
+        this.setSnakePosition();
+      } else { //遊戲中
+        this.state.pause = true;
       }
     }
   }
