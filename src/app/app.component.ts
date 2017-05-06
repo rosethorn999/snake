@@ -23,6 +23,7 @@ export class AppComponent implements OnInit {
   fruit = {
     position: [0, 0]
   };
+  isEating: boolean = false;
 
   ngOnInit() {
     this.setBoard();
@@ -68,14 +69,11 @@ export class AppComponent implements OnInit {
   setColors(x: Number, y: Number): string {
     let fruitX = this.fruit.position[0];
     let fruitY = this.fruit.position[1];
+    let isInSnake: boolean = false;
 
-    // if (x == row && y == col) {
-    //   return "#000";
-    // } else if (this.snake.parts[0].x == row && this.snake.parts[0].y == col) {
-    //   return COLORS.HEAD;
-    // } else if (this.board[col][row] === true) {
-    //   return COLORS.BODY;
-    // }
+    if (x == fruitX && y == fruitY) {
+      return Colors.fruit;
+    }
 
     for (let i = 0; i < this.Snake.position.length; i++) {
       if (x == this.Snake.position[i][0] && y == this.Snake.position[i][1]) {
