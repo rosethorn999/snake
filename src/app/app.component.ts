@@ -41,22 +41,6 @@ export class AppComponent implements OnInit {
 
   }
 
-
-  setColors(col: number, row: number): string {
-    let x = this.fruit.position[0];
-    let y = this.fruit.position[1];
-
-    // if (x == row && y == col) {
-    //   return "#000";
-    // } else if (this.snake.parts[0].x == row && this.snake.parts[0].y == col) {
-    //   return COLORS.HEAD;
-    // } else if (this.board[col][row] === true) {
-    //   return COLORS.BODY;
-    // }
-
-    return Colors.fruit;
-  };
-
   setBoard(): void {
     this.board = [];
 
@@ -81,7 +65,17 @@ export class AppComponent implements OnInit {
   }
 
 
-  setSnakeColor(x: Number, y: Number): string {
+  setColors(x: Number, y: Number): string {
+    let fruitX = this.fruit.position[0];
+    let fruitY = this.fruit.position[1];
+
+    // if (x == row && y == col) {
+    //   return "#000";
+    // } else if (this.snake.parts[0].x == row && this.snake.parts[0].y == col) {
+    //   return COLORS.HEAD;
+    // } else if (this.board[col][row] === true) {
+    //   return COLORS.BODY;
+    // }
 
     for (let i = 0; i < this.Snake.position.length; i++) {
       if (x == this.Snake.position[i][0] && y == this.Snake.position[i][1]) {
