@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Controls, Colors } from './app.consts';
+import { Controls, Board, Colors } from './app.consts';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +9,10 @@ import { Controls, Colors } from './app.consts';
     '(document:keydown)': 'handleKeyboardEvents($event)'
   }
 })
-export class AppComponent implements OnInit {
 
+export class AppComponent implements OnInit {
+  EventDirect: number;
+  interval: Number = 150;
   board = [];
   Snake = {
     direction: Controls.RIGHT,
@@ -18,20 +20,49 @@ export class AppComponent implements OnInit {
       [0, 0], [0, 1], [0, 2]
     ]
   };
-  interval: Number = 150;
-
+  fruit = {
+    position: [0, 0]
+  };
 
   ngOnInit() {
     this.setBoard();
     this.setSnakePosition();
+
+    setInterval(() => {
+      this.creatFruit();
+    }, 3000);
   }
+
+  creatFruit(): void {
+    let randomX: number = Math.floor(Math.random() * Board.columnCount);
+    let randomY: number = Math.floor(Math.random() * Board.rowCount);
+    this.fruit.position = [randomX, randomY];
+    console.log(this.fruit);
+
+  }
+
+
+  setColors(col: number, row: number): string {
+    let x = this.fruit.position[0];
+    let y = this.fruit.position[1];
+
+    // if (x == row && y == col) {
+    //   return "#000";
+    // } else if (this.snake.parts[0].x == row && this.snake.parts[0].y == col) {
+    //   return COLORS.HEAD;
+    // } else if (this.board[col][row] === true) {
+    //   return COLORS.BODY;
+    // }
+
+    return Colors.fruit;
+  };
 
   setBoard(): void {
     this.board = [];
 
-    for (var i = 0; i < 16; i++) {
+    for (var i = 0; i < Board.rowCount; i++) {
       this.board[i] = [];
-      for (var j = 0; j < 16; j++) {
+      for (var j = 0; j < Board.columnCount; j++) {
         this.board[i][j] = false;
       }
     }
@@ -44,8 +75,7 @@ export class AppComponent implements OnInit {
       this.Snake.direction = Controls.LEFT;
     } else if (e.keyCode === Controls.UP) {
       this.Snake.direction = Controls.UP;
-    }
-    else if (e.keyCode === Controls.DOWN) {
+    } else if (e.keyCode === Controls.DOWN) {
       this.Snake.direction = Controls.DOWN;
     }
   }
@@ -102,7 +132,7 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.setSnakePosition();
     }, this.interval);
-    
+
   }
 
 }
