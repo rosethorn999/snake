@@ -3,7 +3,8 @@ export const Controls = {
     RIGHT: 39,
     UP: 38,
     DOWN: 40,
-    SPACE: 32
+    SPACE: 32,
+    B: 66
 }
 
 export const Colors = {

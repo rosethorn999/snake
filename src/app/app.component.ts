@@ -12,8 +12,11 @@ import { Controls, Board, Colors } from './app.consts';
 
 export class AppComponent implements OnInit {
   EventDirect: number;
-  interval: Number = 150;
-  state = { pause: false };
+  state = {
+    pause: false,
+    interval: 150,
+    storm: { past: 150, new: 50 }
+  };
   board = [];
   Snake = {
     direction: Controls.RIGHT,
@@ -106,14 +109,20 @@ export class AppComponent implements OnInit {
         break;
     }
 
+    let timer;
     if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
-      this.setFruit(); //產生新水果
+      this.setFruit(); //產生新水果      
+      if (this.state.interval > 50) {
+        clearTimeout(timer);
+        this.state.interval -= 5;
+        this.state.storm.past = this.state.interval;
+      }
     }
 
     if (!this.state.pause) {
-      setTimeout(() => {
+      timer = setTimeout(() => {
         this.setSnakePosition();
-      }, this.interval);
+      }, this.state.interval);
     }
 
   }
@@ -133,13 +142,20 @@ export class AppComponent implements OnInit {
       }
     }
 
-
     if (e.keyCode == Controls.SPACE) {
       if (this.state.pause) { //已經是暫停的
         this.state.pause = false;
         this.setSnakePosition();
       } else { //遊戲中
         this.state.pause = true;
+      }
+    }
+
+    if (e.keyCode == Controls.B) {
+      if (this.state.interval == this.state.storm.new) { //已經是暴衝模式
+        this.state.interval = this.state.storm.past; //一般
+      } else { //一般速度模式
+        this.state.interval = this.state.storm.new; //暴衝
       }
     }
   }
