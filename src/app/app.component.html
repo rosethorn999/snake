@@ -1,6 +1,6 @@
-<h1>
+<h3>
     <a href="https://samirhodzic.github.io/ngx-snake/">https://samirhodzic.github.io/ngx-snake/</a>
-</h1>
+</h3>
 <div class="container">
     <div class="row" *ngFor="let column of board ; let i = index;">
         <div class="column" *ngFor="let row of column; let j = index;" [ngStyle]="{'background-color': setColors(i,j)}"></div>
