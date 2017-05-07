@@ -15,7 +15,8 @@ export class AppComponent implements OnInit {
   state = {
     pause: false,
     interval: 150,
-    storm: { past: 150, new: 50 }
+    storm: { past: 150, new: 50 },
+    isEating: false
   };
   board = [];
   Snake = {
@@ -27,7 +28,7 @@ export class AppComponent implements OnInit {
   fruit = {
     position: [0, 0]
   };
-  isEating: boolean = false;
+
 
   ngOnInit() {
     this.setBoard();
@@ -113,13 +114,13 @@ export class AppComponent implements OnInit {
         break;
     }
     this.Snake.position.push(tempArray); //新的頭
-    if (!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
-    else this.isEating = false;
+    if (!this.state.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+    else this.state.isEating = false;
 
     let timer;
     if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
       this.setFruit(); //產生新水果
-      this.isEating = true;
+      this.state.isEating = true;
       if (this.state.interval > 50) {
         clearTimeout(timer);
         this.state.interval -= 5;
@@ -148,7 +149,7 @@ export class AppComponent implements OnInit {
         this.Snake.direction = Controls.DOWN;
       }
     }
-    
+
     if (e.keyCode == Controls.SPACE) {
       if (this.state.pause) { //已經是暫停的
         this.state.pause = false;
