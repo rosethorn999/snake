@@ -16,7 +16,8 @@ export class AppComponent implements OnInit {
     pause: false,
     interval: 150,
     storm: { past: 150, new: 50 },
-    isEating: false
+    isEating: false,
+    noWall: false
   };
   board = [];
   Snake = {
@@ -81,8 +82,10 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] - 1); //y          
         } else {
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-          tempArray.push(Board.columnCount - 1); //y                  
+          if (this.state.noWall) {
+            tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
+            tempArray.push(Board.columnCount - 1); //y                  
+          }
         }
         break;
       case Controls.RIGHT:
@@ -90,8 +93,10 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] + 1); //y
         } else {
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-          tempArray.push(0); //y
+          if (this.state.noWall) {
+            tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
+            tempArray.push(0); //y
+          }
         }
         break;
       case Controls.UP:
@@ -99,8 +104,10 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] - 1); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y          
         } else {
-          tempArray.push(Board.rowCount - 1); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
+          if (this.state.noWall) {
+            tempArray.push(Board.rowCount - 1); //x
+            tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
+          }
         }
         break;
       case Controls.DOWN:
@@ -108,14 +115,19 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] + 1); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
         } else {
-          tempArray.push(0); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
+          if (this.state.noWall) {
+            tempArray.push(0); //x
+            tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
+          }
         }
         break;
     }
-    this.Snake.position.push(tempArray); //新的頭
-    if (!this.state.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
-    else this.state.isEating = false;
+    if (tempArray.length > 0) {
+      this.Snake.position.push(tempArray); //新的頭
+      if (!this.state.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+      else this.state.isEating = false;
+    }
+
 
     let timer;
     if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
