@@ -80,7 +80,8 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] - 1); //y
           this.Snake.position.push(tempArray); //新的頭
-          this.Snake.position.shift(); //移除第一個值(尾巴)
+          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+          else this.isEating = false;
         }
         break;
       case Controls.RIGHT:
@@ -88,7 +89,8 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] + 1); //y
           this.Snake.position.push(tempArray); //新的頭
-          this.Snake.position.shift(); //移除第一個值(尾巴)
+          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+          else this.isEating = false;
         }
         break;
       case Controls.UP:
@@ -96,7 +98,9 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] - 1); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
           this.Snake.position.push(tempArray); //新的頭
-          this.Snake.position.shift(); //移除第一個值(尾巴)
+
+          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+          else this.isEating = false;
         }
         break;
       case Controls.DOWN:
@@ -104,14 +108,16 @@ export class AppComponent implements OnInit {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] + 1); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
           this.Snake.position.push(tempArray); //新的頭
-          this.Snake.position.shift(); //移除第一個值(尾巴)
+          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+          else this.isEating = false;
         }
         break;
     }
 
     let timer;
     if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
-      this.setFruit(); //產生新水果      
+      this.setFruit(); //產生新水果
+      this.isEating = true;      
       if (this.state.interval > 50) {
         clearTimeout(timer);
         this.state.interval -= 5;
