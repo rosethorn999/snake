@@ -78,46 +78,48 @@ export class AppComponent implements OnInit {
       case Controls.LEFT:
         if (this.Snake.position[this.Snake.position.length - 1][1] - 1 >= 0) {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] - 1); //y
-          this.Snake.position.push(tempArray); //新的頭
-          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
-          else this.isEating = false;
+          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] - 1); //y          
+        } else {
+          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
+          tempArray.push(Board.columnCount - 1); //y                  
         }
         break;
       case Controls.RIGHT:
         if (this.Snake.position[this.Snake.position.length - 1][1] + 1 < this.board.length) {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] + 1); //y
-          this.Snake.position.push(tempArray); //新的頭
-          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
-          else this.isEating = false;
+        } else {
+          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
+          tempArray.push(0); //y
         }
         break;
       case Controls.UP:
         if (this.Snake.position[this.Snake.position.length - 1][0] - 1 >= 0) {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] - 1); //x
+          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y          
+        } else {
+          tempArray.push(Board.rowCount - 1); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
-          this.Snake.position.push(tempArray); //新的頭
-
-          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
-          else this.isEating = false;
         }
         break;
       case Controls.DOWN:
         if (this.Snake.position[this.Snake.position.length - 1][0] + 1 < this.board[0].length) {
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] + 1); //x
           tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
-          this.Snake.position.push(tempArray); //新的頭
-          if(!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
-          else this.isEating = false;
+        } else {
+          tempArray.push(0); //x
+          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
         }
         break;
     }
+    this.Snake.position.push(tempArray); //新的頭
+    if (!this.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
+    else this.isEating = false;
 
     let timer;
     if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
       this.setFruit(); //產生新水果
-      this.isEating = true;      
+      this.isEating = true;
       if (this.state.interval > 50) {
         clearTimeout(timer);
         this.state.interval -= 5;
@@ -130,7 +132,6 @@ export class AppComponent implements OnInit {
         this.setSnakePosition();
       }, this.state.interval);
     }
-
   }
 
   handleKeyboardEvents(e: KeyboardEvent) {
@@ -147,7 +148,7 @@ export class AppComponent implements OnInit {
         this.Snake.direction = Controls.DOWN;
       }
     }
-
+    
     if (e.keyCode == Controls.SPACE) {
       if (this.state.pause) { //已經是暫停的
         this.state.pause = false;
@@ -164,6 +165,7 @@ export class AppComponent implements OnInit {
         this.state.interval = this.state.storm.new; //暴衝
       }
     }
+
   }
 
   setColors(x: Number, y: Number): string {
