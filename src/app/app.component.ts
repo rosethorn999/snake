@@ -77,6 +77,7 @@ export class AppComponent implements OnInit {
         break;
       } else {
         this.fruit.position = [randomX, randomY];
+        this.playAudio("poka01");
       }
     }
   }
@@ -140,12 +141,14 @@ export class AppComponent implements OnInit {
     let y = tempArray[1];
     if ((y < 0) || (y >= this.board.length) || (x < 0) || (x >= this.board[0].length)) {
       this.state.gameOver = true;
+      this.playAudio("jump04");
       return true;
     }
 
     for (let i = 0; i < this.Snake.position.length - 1; i++) {
       if (this.Snake.position[i][0] == x && this.Snake.position[i][1] == y) {
         this.state.gameOver = true;
+        this.playAudio("jump04");
         return true;
       }
     }
@@ -184,7 +187,7 @@ export class AppComponent implements OnInit {
       }
     }
 
-    if (e.keyCode == Controls.RESTART && this.state.gameOver){
+    if (e.keyCode == Controls.RESTART && this.state.gameOver) {
       this.ngOnInit();
     }
 
@@ -207,5 +210,11 @@ export class AppComponent implements OnInit {
     }
 
     return Colors.background; //背景
+  }
+
+  playAudio(v): void {
+    let audio = new Audio('../assets/' + v + '.mp3');
+    audio.volume = 0.3;
+    audio.play();
   }
 }
