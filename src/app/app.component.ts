@@ -11,30 +11,37 @@ import { Controls, Board, Colors } from './app.consts';
 })
 
 export class AppComponent implements OnInit {
-  EventDirect: number;
-  state = {
-    pause: false,
-    interval: 150,
-    storm: { past: 150, new: 50 },
-    isEating: false,
-    noWall: false
-  };
-  board = [];
-  Snake = {
-    direction: Controls.RIGHT,
-    position: [
-      [0, 0], [0, 1], [0, 2]
-    ]
-  };
-  fruit = {
-    position: [0, 0]
-  };
-
+  state;
+  board;
+  Snake;
+  fruit;
 
   ngOnInit() {
+    this.initValues();
     this.setBoard();
     this.setFruit();
     this.setSnakePosition();
+  }
+
+  initValues() {
+    this.state = {
+      pause: false,
+      interval: 150,
+      storm: { past: 150, new: 50 },
+      isEating: false,
+      noWall: false,
+      gameOver: false
+    };
+    this.board = [];
+    this.Snake = {
+      direction: Controls.RIGHT,
+      position: [
+        [0, 0], [0, 1], [0, 2]
+      ]
+    };
+    this.fruit = {
+      position: [0, 0]
+    };
   }
 
   setBoard(): void {
@@ -75,76 +82,74 @@ export class AppComponent implements OnInit {
   }
 
   setSnakePosition() {
+    let timer;
     let tempArray = [];
+
     switch (this.Snake.direction) {
       case Controls.LEFT:
-        if (this.Snake.position[this.Snake.position.length - 1][1] - 1 >= 0) {
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] - 1); //y          
-        } else {
-          if (this.state.noWall) {
-            tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-            tempArray.push(Board.columnCount - 1); //y                  
-          }
-        }
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] - 1); //y
         break;
       case Controls.RIGHT:
-        if (this.Snake.position[this.Snake.position.length - 1][1] + 1 < this.board.length) {
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] + 1); //y
-        } else {
-          if (this.state.noWall) {
-            tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
-            tempArray.push(0); //y
-          }
-        }
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][0]); //x
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][1] + 1); //y
         break;
       case Controls.UP:
-        if (this.Snake.position[this.Snake.position.length - 1][0] - 1 >= 0) {
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] - 1); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y          
-        } else {
-          if (this.state.noWall) {
-            tempArray.push(Board.rowCount - 1); //x
-            tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
-          }
-        }
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] - 1); //x
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
         break;
       case Controls.DOWN:
-        if (this.Snake.position[this.Snake.position.length - 1][0] + 1 < this.board[0].length) {
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] + 1); //x
-          tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
-        } else {
-          if (this.state.noWall) {
-            tempArray.push(0); //x
-            tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
-          }
-        }
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][0] + 1); //x
+        tempArray.push(this.Snake.position[this.Snake.position.length - 1][1]); //y
         break;
     }
-    if (tempArray.length > 0) {
+
+    if (this.state.noWall) {
+      if (tempArray[0] >= this.board[0].length) tempArray[0] = 0;
+      else if (tempArray[0] < 0) tempArray[0] = this.board[0].length - 1;
+
+      if (tempArray[1] >= this.board.length) tempArray[1] = 0;
+      else if (tempArray[1] < 0) tempArray[1] = this.board.length - 1;
+    }
+
+    if (!this.isCollision(tempArray)) {
       this.Snake.position.push(tempArray); //新的頭
       if (!this.state.isEating) this.Snake.position.shift(); //移除第一個值(尾巴)
       else this.state.isEating = false;
-    }
 
-
-    let timer;
-    if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
-      this.setFruit(); //產生新水果
-      this.state.isEating = true;
-      if (this.state.interval > 50) {
-        clearTimeout(timer);
-        this.state.interval -= 5;
-        this.state.storm.past = this.state.interval;
+      if (tempArray[0] == this.fruit.position[0] && tempArray[1] == this.fruit.position[1]) { //頭跟水果重疊
+        this.setFruit(); //產生新水果
+        this.state.isEating = true;
+        if (this.state.interval > 50) {
+          clearTimeout(timer);
+          this.state.interval -= 5;
+          this.state.storm.past = this.state.interval;
+        }
       }
     }
 
-    if (!this.state.pause) {
+    if (!this.state.pause && !this.state.gameOver) {
       timer = setTimeout(() => {
         this.setSnakePosition();
       }, this.state.interval);
     }
+  }
+
+  isCollision(tempArray: any): boolean {
+    let x = tempArray[0];
+    let y = tempArray[1];
+    if ((y < 0) || (y >= this.board.length) || (x < 0) || (x >= this.board[0].length)) {
+      this.state.gameOver = true;
+      return true;
+    }
+
+    for (let i = 0; i < this.Snake.position.length - 1; i++) {
+      if (this.Snake.position[i][0] == x && this.Snake.position[i][1] == y) {
+        this.state.gameOver = true;
+        return true;
+      }
+    }
+    return false;
   }
 
   handleKeyboardEvents(e: KeyboardEvent) {
@@ -177,6 +182,10 @@ export class AppComponent implements OnInit {
       } else { //一般速度模式
         this.state.interval = this.state.storm.new; //暴衝
       }
+    }
+
+    if (e.keyCode == Controls.RESTART && this.state.gameOver){
+      this.ngOnInit();
     }
 
   }

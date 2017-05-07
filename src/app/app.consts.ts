@@ -4,7 +4,8 @@ export const Controls = {
     UP: 38,
     DOWN: 40,
     SPACE: 32,
-    B: 66
+    B: 66,
+    RESTART: 27
 }
 
 export const Colors = {
