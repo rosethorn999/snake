@@ -29,8 +29,9 @@ export class AppComponent implements OnInit {
       interval: 150,
       storm: { past: 150, new: 50 },
       isEating: false,
-      noWall: false,
-      gameOver: false
+      noWall: true,
+      gameOver: false,
+      score:0
     };
     this.board = [];
     this.Snake = {
@@ -78,6 +79,7 @@ export class AppComponent implements OnInit {
       } else {
         this.fruit.position = [randomX, randomY];
         this.playAudio("poka01");
+        this.state.score++;
       }
     }
   }
@@ -185,6 +187,10 @@ export class AppComponent implements OnInit {
       } else { //一般速度模式
         this.state.interval = this.state.storm.new; //暴衝
       }
+    }
+
+    if (e.keyCode == Controls.wallSW) { //切換是否會撞牆死亡
+      this.state.noWall= !this.state.noWall;
     }
 
     if (e.keyCode == Controls.RESTART && this.state.gameOver) {

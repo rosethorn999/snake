@@ -5,6 +5,7 @@ export const Controls = {
     DOWN: 40,
     SPACE: 32,
     B: 66,
+    wallSW:87,
     RESTART: 27
 }
 

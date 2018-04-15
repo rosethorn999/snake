@@ -1,8 +1,33 @@
-<h3>
+<!-- <h3>
     <a href="https://samirhodzic.github.io/ngx-snake/">https://samirhodzic.github.io/ngx-snake/</a>
-</h3>
+</h3> -->
+
 <div class="container">
-    <div class="row" *ngFor="let column of board ; let i = index;">
-        <div class="column" *ngFor="let row of column; let j = index;" [ngStyle]="{'background-color': setColors(i,j)}"></div>
+    <div class="container1">
+        <div class="board">
+            <ul>
+                <li>Move:
+                    <span class="badge">↑ ↓ ← →</span>
+                </li>
+                <li>Restart:
+                    <span class="badge">F5</span>
+                </li>
+                <li>Pause:
+                    <span class="badge">SPACE</span>
+                </li>
+                <li>Wall SW:
+                    <span class="badge">W</span>
+                </li>
+                <li>CrazyMode SW:
+                    <span class="badge">B</span>
+                </li>
+                <li>Score:
+                    <span class="badge">{{state.score}}</span>
+                </li>
+            </ul>
+        </div>
+        <div class="row" *ngFor="let column of board ; let i = index;">
+            <div class="column" *ngFor="let row of column; let j = index;" [ngStyle]="{'background-color': setColors(i,j)}"></div>
+        </div>
+
     </div>
-</div>
