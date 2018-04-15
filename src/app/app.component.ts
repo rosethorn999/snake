@@ -219,7 +219,7 @@ export class AppComponent implements OnInit {
   }
 
   playAudio(v): void {
-    let audio = new Audio('../assets/' + v + '.mp3');
+    let audio = new Audio('./assets/' + v + '.mp3');
     audio.volume = 0.3;
     audio.play();
   }
